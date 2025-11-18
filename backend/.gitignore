@@ -1,0 +1,6 @@
+.env
+bun.lock
+node_modules/
+# Las siguientes líneas ya no son necesarias pero se mantienen por seguridad
+*.sqlite
+*.db
