@@ -4,3 +4,7 @@ node_modules/
 # Las siguientes líneas ya no son necesarias pero se mantienen por seguridad
 *.sqlite
 *.db
+
+package-lock.json
+
+*.sh

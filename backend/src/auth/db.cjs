@@ -28,23 +28,11 @@ async function initializeTables() {
         username TEXT UNIQUE NOT NULL,
         email TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL,
+        role TEXT DEFAULT 'BASIC' CHECK(role IN ('BASIC', 'PRO', 'MAR')),
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
     console.log('Tabla users verificada/creada correctamente en Turso DB.');
-
-    // Crear tabla de sesiones
-    await db.execute(`
-      CREATE TABLE IF NOT EXISTS sessions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        token TEXT UNIQUE NOT NULL,
-        expires_at DATETIME NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id)
-      )
-    `);
-    console.log('Tabla sessions verificada/creada correctamente en Turso DB.');
     console.log('✓ Conectado exitosamente a Turso DB');
   } catch (error) {
     console.error('Error al inicializar las tablas en Turso:', error.message);
