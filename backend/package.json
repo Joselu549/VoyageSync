@@ -7,9 +7,6 @@
     "start": "node index.cjs",
     "setup:turso": "./setup-turso.sh",
     "drop:tables": "./drop-tables.sh",
-    "test:auth": "./test-auth.sh",
-    "test:ratelimit": "./test-rate-limit.sh",
-    "test:roles": "./test-roles.sh",
     "dev": "node index.cjs"
   },
   "keywords": [],
