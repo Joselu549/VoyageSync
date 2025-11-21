@@ -1,28 +1,25 @@
-const { createClient } = require('@libsql/client');
-const dotenv = require('dotenv');
-dotenv.config();
-// Verificar que las variables de entorno estén configuradas
-if (!process.env.TURSO_DATABASE_URL) {
-  throw new Error('TURSO_DATABASE_URL no está configurada en el archivo .env');
-}
+import { singleton } from 'tsyringe';
+import TursoClient from '../database/turso-client';
 
-if (!process.env.TURSO_AUTH_TOKEN) {
-  throw new Error('TURSO_AUTH_TOKEN no está configurada en el archivo .env');
-}
+/**
+ * Servicio de base de datos que inicializa las tablas
+ */
+@singleton()
+export class DatabaseService {
+  private tursoClient: TursoClient;
 
-// Crear cliente de Turso
-const db = createClient({
-  url: process.env.TURSO_DATABASE_URL,
-  authToken: process.env.TURSO_AUTH_TOKEN
-});
+  constructor() {
+    this.tursoClient = TursoClient.getInstance();
+    this.initializeTables();
+  }
 
-console.log('Conectando a Turso DB...');
-
-// Función para inicializar las tablas
-async function initializeTables() {
-  try {
-    // Crear tabla de usuarios si no existe
-    await db.execute(`
+  /**
+   * Inicializar las tablas de la base de datos
+   */
+  private async initializeTables(): Promise<void> {
+    try {
+      // Tabla de usuarios
+      await this.tursoClient.execute(`
         CREATE TABLE IF NOT EXISTS users (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           email TEXT NOT NULL UNIQUE,
@@ -30,8 +27,10 @@ async function initializeTables() {
           name TEXT,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
-    `);
-    await db.execute(`
+      `);
+
+      // Tabla de planes de viaje
+      await this.tursoClient.execute(`
         CREATE TABLE IF NOT EXISTS travel_plans (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           user_id INTEGER NOT NULL,
@@ -40,8 +39,10 @@ async function initializeTables() {
           end_date DATE,
           FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         );
-    `);
-    await db.execute(`
+      `);
+
+      // Tabla de destinos
+      await this.tursoClient.execute(`
         CREATE TABLE IF NOT EXISTS destinations (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           travel_plan_id INTEGER NOT NULL,
@@ -52,9 +53,11 @@ async function initializeTables() {
           longitude REAL,
           position INTEGER,
           FOREIGN KEY (travel_plan_id) REFERENCES travel_plans(id) ON DELETE CASCADE
-        );  
-    `);
-    await db.execute(`
+        );
+      `);
+
+      // Tabla de estancias/hoteles
+      await this.tursoClient.execute(`
         CREATE TABLE IF NOT EXISTS stays (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           destination_id INTEGER NOT NULL,
@@ -64,8 +67,10 @@ async function initializeTables() {
           check_out DATETIME,
           FOREIGN KEY (destination_id) REFERENCES destinations(id) ON DELETE CASCADE
         );
-    `);
-    await db.execute(`
+      `);
+
+      // Tabla de actividades
+      await this.tursoClient.execute(`
         CREATE TABLE IF NOT EXISTS activities (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           destination_id INTEGER NOT NULL,
@@ -75,9 +80,11 @@ async function initializeTables() {
           scheduled_at DATETIME,
           duration_minutes INTEGER,
           FOREIGN KEY (destination_id) REFERENCES destinations(id) ON DELETE CASCADE
-        );  
-    `);
-    await db.execute(`
+        );
+      `);
+
+      // Tabla de transportes
+      await this.tursoClient.execute(`
         CREATE TABLE IF NOT EXISTS transports (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           travel_plan_id INTEGER NOT NULL,
@@ -92,64 +99,19 @@ async function initializeTables() {
           FOREIGN KEY (from_destination_id) REFERENCES destinations(id) ON DELETE RESTRICT,
           FOREIGN KEY (to_destination_id) REFERENCES destinations(id) ON DELETE RESTRICT
         );
-    `);
-    console.log('✓ Conectado exitosamente a Turso DB');
-  } catch (error) {
-    console.error('Error al inicializar las tablas en Turso:', error.message);
-    throw error;
+      `);
+
+      console.log('✓ Tablas de base de datos inicializadas correctamente');
+    } catch (error) {
+      console.error('Error al inicializar las tablas en Turso:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Obtener cliente de Turso
+   */
+  public getClient(): TursoClient {
+    return this.tursoClient;
   }
 }
-
-// Inicializar tablas al cargar el módulo
-initializeTables().catch(err => {
-  console.error('Error fatal al conectar con Turso DB:', err);
-  process.exit(1);
-});
-
-// Funciones auxiliares para operaciones comunes (adaptadas para Turso)
-const dbHelpers = {
-  // Ejecutar una consulta genérica
-  run: async (sql, params = []) => {
-    try {
-      const result = await db.execute({
-        sql: sql,
-        args: params
-      });
-      return { 
-        id: result.lastInsertRowid ? Number(result.lastInsertRowid) : null,
-        changes: result.rowsAffected 
-      };
-    } catch (error) {
-      throw error;
-    }
-  },
-
-  // Obtener un solo registro
-  get: async (sql, params = []) => {
-    try {
-      const result = await db.execute({
-        sql: sql,
-        args: params
-      });
-      return result.rows[0] || null;
-    } catch (error) {
-      throw error;
-    }
-  },
-
-  // Obtener múltiples registros
-  all: async (sql, params = []) => {
-    try {
-      const result = await db.execute({
-        sql: sql,
-        args: params
-      });
-      return result.rows;
-    } catch (error) {
-      throw error;
-    }
-  }
-};
-
-module.exports = { db, dbHelpers };
-
