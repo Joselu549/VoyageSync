@@ -19,10 +19,6 @@ yarn-error.log
 *.launch
 .settings/
 *.sublime-workspace
-.github/
-.vscode/
-.claude/
-.angular/
 
 # Visual Studio Code
 .vscode/*
