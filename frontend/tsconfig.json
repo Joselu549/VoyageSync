@@ -14,7 +14,8 @@
     "module": "preserve",
     "baseUrl": ".",
     "paths": {
-      "@datasources/*": ["src/app/core/datasources/*"]
+      "@datasources/*": ["src/app/core/datasources/*"],
+      "@services/*": ["src/app/core/services/*"]
     }
   },
   "angularCompilerOptions": {

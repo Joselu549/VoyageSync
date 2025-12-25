@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { email, Field, form, required, validate } from '@angular/forms/signals';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { LoggingDataModel } from '@datasources/login/login';
-import { email, Field, form, required, validate } from '@angular/forms/signals';
+import { LoginService } from '@services/login.service';
 
 @Component({
   selector: 'app-login-page',
@@ -23,20 +24,20 @@ export class LoginPage {
     required(schemaPath.email, { message: 'El email es obligatorio' });
     email(schemaPath.email, { message: 'Introduce una dirección de email válida' });
     required(schemaPath.password, { message: 'La contraseña es obligatoria' });
-    if (this.isRegistring()) {
-      required(schemaPath.confirmPassword, {
-        message: 'La confirmación de la contraseña es obligatoria',
-      });
-      validate(schemaPath.confirmPassword, ({ value, valueOf }) => {
-        const password = valueOf(schemaPath.password);
-        const confirmPassword = value();
-        if (password !== confirmPassword) {
-          return { kind: 'passwordMismatch', message: 'Las contraseñas no coinciden' };
-        }
-        return null;
-      });
-    }
+    required(schemaPath.confirmPassword, {
+      message: 'La confirmación de la contraseña es obligatoria',
+    });
+    validate(schemaPath.confirmPassword, ({ value, valueOf }) => {
+      const password = valueOf(schemaPath.password);
+      const confirmPassword = value();
+      if (password !== confirmPassword) {
+        return { kind: 'passwordMismatch', message: 'Las contraseñas no coinciden' };
+      }
+      return null;
+    });
   });
+
+  loginService = inject(LoginService);
 
   onSubmit(event: Event) {
     event.preventDefault();
@@ -45,6 +46,25 @@ export class LoginPage {
 
   login() {
     console.warn('Login attempt', this.loginModel());
+    if (!this.isRegistring()) {
+      this.loginService.login(this.loginModel().email, this.loginModel().password).subscribe({
+        next: (response) => {
+          console.log('Login successful:', response);
+        },
+        error: (error) => {
+          console.error('Login failed:', error);
+        },
+      });
+    } else {
+      this.loginService.register(this.loginModel().email, this.loginModel().password).subscribe({
+        next: (response) => {
+          console.log('Registration successful:', response);
+        },
+        error: (error) => {
+          console.error('Registration failed:', error);
+        },
+      });
+    }
   }
 
   changeRegistring() {

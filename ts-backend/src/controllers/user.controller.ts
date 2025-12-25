@@ -112,6 +112,7 @@ export class UserController {
     return async (req: Request, res: Response) => {
       try {
         const { email, password } = req.body;
+        console.log('Login attempt for email:', email);
 
         // Validaciones básicas
         if (!email || !password) {
