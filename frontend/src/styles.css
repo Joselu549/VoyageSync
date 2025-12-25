@@ -1,1 +1,29 @@
 @import 'tailwindcss';
+
+/* Load custom font (place the font file in `frontend/src/assets/fonts/`) */
+@font-face {
+  font-family: 'Lexend Deca';
+  src: url('assets/fonts/LexendDeca-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-family: 'Lexend Deca';
+  --primary-color: #e06c9f;
+  --secondary-color: #76ac68;
+  --tertiary-color: #99d0ee;
+  font-family: var(--font-family);
+  user-select: none;
+}
+
+.background {
+  background-image: linear-gradient(to bottom right, var(--tertiary-color), var(--primary-color));
+}
+
+.bg-card {
+  backdrop-filter: blur(40px);
+
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.1));
+}

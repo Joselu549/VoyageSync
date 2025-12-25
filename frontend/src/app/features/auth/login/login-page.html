@@ -1,0 +1,87 @@
+<div class="background flex items-center justify-center w-screen h-screen">
+  <div
+    class="bg-card border-2 border-white w-fit h-fit p-4 rounded-2xl shadow-2xl flex flex-col items-center justify-center"
+  >
+    <img
+      ngSrc="assets/images/logo-grande.png"
+      (click)="defaultLogin()"
+      alt="Logo"
+      width="542"
+      height="250"
+      priority="true"
+    />
+    <div class="flex flex-col w-xl h-fit items-center justify-center ml-8">
+      <div class="w-100 flex items-center justify-center flex-col gap-4">
+        <form class="flex flex-col items-center justify-center gap-4" (submit)="onSubmit($event)">
+          <div class="flex flex-col items-start justify-center gap-2">
+            <span>Email</span>
+            <input
+              type="email"
+              placeholder="Introduce tu email..."
+              [field]="loginForm.email"
+              class="w-100 border-2 border-white rounded-sm p-2"
+            />
+            @if (loginForm.email().touched() && loginForm.email().invalid()) {
+            <ul>
+              @for (error of loginForm.email().errors(); track error) {
+              <li class="text-red-500 text-sm">* {{ error.message }}</li>
+              }
+            </ul>
+            }
+          </div>
+          <div class="flex flex-col items-start justify-center gap-2">
+            <span>Contraseña</span>
+            <input
+              type="password"
+              placeholder="Introduce tu contraseña..."
+              [field]="loginForm.password"
+              class="w-100 border-2 border-white rounded-sm p-2"
+            />
+            @if (loginForm.password().touched() && loginForm.password().invalid()) {
+            <ul>
+              @for (error of loginForm.password().errors(); track error) {
+              <li class="text-red-500 text-sm">* {{ error.message }}</li>
+              }
+            </ul>
+            }
+          </div>
+          @if (isRegistring()) {
+          <div class="flex flex-col items-start justify-center gap-2">
+            <span>Repite contraseña</span>
+            <input
+              type="password"
+              placeholder="Introduce tu contraseña..."
+              [field]="loginForm.confirmPassword"
+              class="w-100 border-2 border-white rounded-sm p-2"
+            />
+            @if (loginForm.confirmPassword().touched() && loginForm.confirmPassword().invalid()) {
+            <ul>
+              @for (error of loginForm.confirmPassword().errors(); track error) {
+              <li class="text-red-500 text-sm">* {{ error.message }}</li>
+              }
+            </ul>
+            }
+          </div>
+          }
+          <div class="w-100 flex items-center justify-between">
+            <span class="text-sm text-nowrap">¿Olvidaste tu contraseña?</span>
+            @if (!isRegistring()) {
+            <div>
+              <span class="text-sm text-nowrap">¿No tienes cuenta? </span>
+              <span class="text-sm text-nowrap" (click)="changeRegistring()">Regístrate</span>
+            </div>
+            } @else {
+            <div>
+              <span class="text-sm text-nowrap">¿Tienes cuenta? </span>
+              <span class="text-sm text-nowrap" (click)="changeRegistring()">Inicia sesión</span>
+            </div>
+            }
+          </div>
+          <button class="p-3 bg-blue-500 text-white rounded m-4 cursor-pointer" type="submit">
+            {{ isRegistring() ? 'Regístrate' : 'Iniciar sesión' }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
