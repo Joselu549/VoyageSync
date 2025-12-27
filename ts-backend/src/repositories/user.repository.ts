@@ -1,6 +1,6 @@
-import { singleton } from 'tsyringe';
 import { BaseRepository } from './base.repository';
 import { User } from '../models/user.model';
+import { singleton } from 'tsyringe';
 
 /**
  * Repositorio de usuarios
@@ -31,10 +31,11 @@ export class UserRepository extends BaseRepository<User> {
   /**
    * Crear usuario (sin incluir id ni created_at)
    */
-  async createUser(email: string, passwordHash: string, name?: string): Promise<number | null> {
-    const sql = `INSERT INTO ${this.tableName} (email, password_hash, name) VALUES (?, ?, ?)`;
-    const result = await this.tursoClient.execute(sql, [email, passwordHash, name || null]);
-    return result.id;
+  async createUser(name: string, email: string, passwordHash: string): Promise<string | null> {
+    const id = crypto.randomUUID();
+    const sql = `INSERT INTO ${this.tableName} (id, email, password_hash, name) VALUES (?, ?, ?, ?)`;
+    const result = await this.tursoClient.execute(sql, [id, email, passwordHash, name]);
+    return result.changes > 0 ? id : null;
   }
 
   /**

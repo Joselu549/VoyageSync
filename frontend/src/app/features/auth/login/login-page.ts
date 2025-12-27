@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { email, Field, form, required, validate } from '@angular/forms/signals';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { Router } from '@angular/router';
 import { LoggingDataModel } from '@datasources/login/login';
-import { LoginService } from '@services/login.service';
+import { AuthService } from '@services/auth.service';
+import { FatherRoutes } from '@datasources/routes/routes';
 
 @Component({
   selector: 'app-login-page',
@@ -37,7 +39,8 @@ export class LoginPage {
     });
   });
 
-  loginService = inject(LoginService);
+  authService = inject(AuthService);
+  router = inject(Router);
 
   onSubmit(event: Event) {
     event.preventDefault();
@@ -47,18 +50,20 @@ export class LoginPage {
   login() {
     console.warn('Login attempt', this.loginModel());
     if (!this.isRegistring()) {
-      this.loginService.login(this.loginModel().email, this.loginModel().password).subscribe({
+      this.authService.login(this.loginModel().email, this.loginModel().password).subscribe({
         next: (response) => {
           console.log('Login successful:', response);
+          this.router.navigate([FatherRoutes.DASHBOARD]);
         },
         error: (error) => {
           console.error('Login failed:', error);
         },
       });
     } else {
-      this.loginService.register(this.loginModel().email, this.loginModel().password).subscribe({
+      this.authService.register(this.loginModel().email, this.loginModel().password).subscribe({
         next: (response) => {
           console.log('Registration successful:', response);
+          this.router.navigate([FatherRoutes.DASHBOARD]);
         },
         error: (error) => {
           console.error('Registration failed:', error);

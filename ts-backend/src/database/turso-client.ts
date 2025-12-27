@@ -1,4 +1,4 @@
-import { createClient, Client, InValue } from '@libsql/client';
+import { Client, InValue, createClient } from '@libsql/client';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -26,6 +26,7 @@ class TursoClient {
       authToken: process.env.TURSO_AUTH_TOKEN,
     });
 
+    this.createTableIfNotExists();
     console.log('✓ Cliente Turso DB inicializado');
   }
 
@@ -103,6 +104,20 @@ class TursoClient {
    */
   public close(): void {
     this.client.close();
+  }
+
+  private createTableIfNotExists() {
+    const sql = `
+      CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        password_hash TEXT NOT NULL,
+        role TEXT NOT NULL DEFAULT 'basic' CHECK(role IN ('basic', 'pro', 'admin', 'mar')),
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+    this.client.execute({ sql });
   }
 }
 
