@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-import dotenv from 'dotenv';
-import { container } from 'tsyringe';
 import { ExpressApplicationService } from './services/express-application.service';
+import { container } from 'tsyringe';
+import dotenv from 'dotenv';
 
 dotenv.config();
 

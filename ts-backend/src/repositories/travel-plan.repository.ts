@@ -1,6 +1,6 @@
-import { singleton } from 'tsyringe';
-import { BaseRepository } from './base.repository';
 import { TravelPlan } from '../models/travel-plan.model';
+import { BaseRepository } from './base.repository';
+import { singleton } from 'tsyringe';
 
 /**
  * Repositorio de planes de viaje

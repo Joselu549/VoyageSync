@@ -1,5 +1,5 @@
-import { singleton } from 'tsyringe';
 import TursoClient from '../database/turso-client';
+import { singleton } from 'tsyringe';
 
 /**
  * Servicio de base de datos que inicializa las tablas

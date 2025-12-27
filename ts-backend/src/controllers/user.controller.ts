@@ -1,7 +1,9 @@
-import { Router, Request, Response } from 'express';
-import { autoInjectable } from 'tsyringe';
 import { UserRepository } from '../repositories/user.repository';
 import { HashService } from '../services/hash.service';
+import { Router, Request, Response } from 'express';
+import { autoInjectable } from 'tsyringe';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 @autoInjectable()
 export class UserController {
@@ -11,6 +13,7 @@ export class UserController {
     private userRepository: UserRepository,
     private hashService: HashService,
   ) {
+    dotenv.config();
     this.setRoutes();
   }
 
@@ -19,6 +22,8 @@ export class UserController {
     this.router.get('/:id', this.getUserById());
     this.router.post('/register', this.createUser());
     this.router.post('/login', this.loginUser());
+    this.router.post('/logout', this.logoutUser());
+    this.router.post('/session', this.checkSession());
   }
 
   /**
@@ -28,7 +33,6 @@ export class UserController {
     return async (_: Request, res: Response) => {
       try {
         const users = await this.userRepository.findAll();
-        // No enviar password_hash al cliente
         const safeUsers = users.map(({ password_hash, ...user }) => user);
         res.status(200).json(safeUsers);
       } catch (error) {
@@ -90,9 +94,7 @@ export class UserController {
 
         // Hashear la contraseña con bcrypt
         const passwordHash = await this.hashService.hashPassword(password);
-
-        // Crear usuario con contraseña hasheada
-        const userId = await this.userRepository.createUser(email, passwordHash, name);
+        const userId = await this.userRepository.createUser(name, email, passwordHash);
 
         res.status(201).json({
           message: 'Usuario creado exitosamente',
@@ -112,8 +114,7 @@ export class UserController {
     return async (req: Request, res: Response) => {
       try {
         const { email, password } = req.body;
-
-        // Validaciones básicas
+        console.log('Login attempt for email:', email);
         if (!email || !password) {
           return res.status(400).json({ error: 'Email y password son requeridos' });
         }
@@ -130,15 +131,63 @@ export class UserController {
           return res.status(401).json({ error: 'Credenciales inválidas' });
         }
 
-        // Login exitoso - no enviar password_hash
         const { password_hash, ...safeUser } = user;
-        res.status(200).json({
-          message: 'Login exitoso',
-          user: safeUser,
-        });
+        const token = jwt.sign(
+          { userName: user.name, userEmail: user.email, userRole: user.role },
+          process.env.JWT_SECRET as jwt.Secret,
+          { expiresIn: '1h' },
+        );
+        res
+          .cookie('access_token', token, {
+            httpOnly: true,
+            sameSite: 'strict',
+            maxAge: 1000 * 60 * 60,
+          })
+          .status(200)
+          .json({
+            message: 'Login exitoso, con cookie',
+            user: safeUser,
+          });
       } catch (error) {
         console.error('Error en login:', error);
         res.status(500).json({ error: 'Error al realizar login' });
+      }
+    };
+  }
+
+  private logoutUser() {
+    return async (_: Request, res: Response) => {
+      try {
+        res
+          .clearCookie('access_token', {
+            httpOnly: true,
+            sameSite: 'strict',
+          })
+          .status(200)
+          .json({ message: 'Logout exitoso' });
+      } catch (error) {
+        console.error('Error en logout:', error);
+        res.status(500).json({ error: 'Error al realizar logout' });
+      }
+    };
+  }
+
+  private checkSession() {
+    return async (req: Request, res: Response) => {
+      try {
+        const token = req.cookies['access_token'];
+        if (!token) {
+          return res.status(401).json({ error: 'No autenticado' });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as jwt.Secret) as jwt.JwtPayload;
+        if (!decoded) {
+          return res.status(401).json({ error: 'Token inválido' });
+        }
+        res.status(200).json({ message: 'Sesión válida', data: decoded });
+      } catch (error) {
+        console.error('Error verificando sesión:', error);
+        res.status(500).json({ error: 'Error al verificar sesión' });
       }
     };
   }

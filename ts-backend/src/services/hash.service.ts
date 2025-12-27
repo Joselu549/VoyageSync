@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt';
 import { singleton } from 'tsyringe';
+import bcrypt from 'bcrypt';
 
 /**
  * Servicio para hashear y verificar contraseñas con bcrypt

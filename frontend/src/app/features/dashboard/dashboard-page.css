@@ -1,0 +1,47 @@
+.dashboard {
+  max-width: 720px;
+  margin: 64px auto;
+  padding: 32px;
+  color: #0f172a;
+  background: linear-gradient(145deg, #f8fafc, #eef2ff);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+}
+
+.dashboard__header {
+  margin-bottom: 24px;
+}
+
+.dashboard__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6366f1;
+  margin: 0 0 8px;
+}
+
+.dashboard__title {
+  font-size: 32px;
+  margin: 0 0 8px;
+  font-weight: 800;
+}
+
+.dashboard__subtitle {
+  margin: 0;
+  color: #475569;
+}
+
+.dashboard__card {
+  margin-top: 24px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+}
+
+.dashboard__message {
+  margin: 0;
+  color: #0f172a;
+  line-height: 1.6;
+}
