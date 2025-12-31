@@ -1,0 +1,19 @@
+import { inject } from '@angular/core';
+import { CanActivateFn } from '@angular/router';
+import { AuthService } from '@services/auth.service';
+import { catchError, map, of, switchMap } from 'rxjs';
+
+export const loginGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+
+  return auth.checkSession().pipe(
+    switchMap(() => {
+      // Sesión válida: cerrar sesión y permitir acceso a login
+      return auth.logout().pipe(map(() => true));
+    }),
+    catchError(() => {
+      // Sin sesión: permitir acceso a login
+      return of(true);
+    })
+  );
+};

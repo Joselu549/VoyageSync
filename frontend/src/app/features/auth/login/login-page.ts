@@ -83,8 +83,8 @@ export class LoginPage {
   defaultLogin() {
     this.isRegistring.set(false);
     this.loginModel.set({
-      email: 'joseluisabellanmonreal@gmail.com',
-      password: 'admin',
+      email: 'prueba@gmail.com',
+      password: '123456',
       confirmPassword: '',
       isRegistring: false,
     });
