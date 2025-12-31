@@ -34,6 +34,16 @@ export class UserRepository extends BaseRepository<User> {
   async createUser(name: string, email: string, passwordHash: string): Promise<string | null> {
     const id = crypto.randomUUID();
     const sql = `INSERT INTO ${this.tableName} (id, email, password_hash, name) VALUES (?, ?, ?, ?)`;
+    console.log(
+      'Creating user with ID:',
+      id,
+      'email:',
+      email,
+      'name:',
+      name,
+      'passwordHash:',
+      passwordHash,
+    );
     const result = await this.tursoClient.execute(sql, [id, email, passwordHash, name]);
     return result.changes > 0 ? id : null;
   }

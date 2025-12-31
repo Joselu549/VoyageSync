@@ -35,9 +35,9 @@ export class AuthService {
   }
 
   register(
+    name: string,
     email: string,
     password: string,
-    name?: string,
   ): Observable<{ message: string; userId: number }> {
     const payload = { email, password, name };
     return this.httpClient.post<{ message: string; userId: number }>(

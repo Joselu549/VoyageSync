@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './assets/styles/content.css';
 
 /* Load custom font (place the font file in `frontend/src/assets/fonts/`) */
 @font-face {
@@ -12,8 +13,10 @@
 :root {
   --font-family: 'Lexend Deca';
   --primary-color: #e06c9f;
+  --primary-color-first: #b12562;
   --secondary-color: #76ac68;
   --tertiary-color: #99d0ee;
+  --fourth-color: #fff;
   font-family: var(--font-family);
   user-select: none;
 }

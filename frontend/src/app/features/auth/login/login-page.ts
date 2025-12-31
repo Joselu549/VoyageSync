@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { email, Field, form, required, validate } from '@angular/forms/signals';
+import { LoggingDataModel, MsgLogin } from '@datasources/login/login';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { LoggingDataModel } from '@datasources/login/login';
 import { FatherRoutes } from '@datasources/routes/routes';
 import { AuthService } from '@services/auth.service';
 import { Router } from '@angular/router';
@@ -15,12 +15,14 @@ import { Router } from '@angular/router';
 })
 export class LoginPage {
   loginModel = signal<LoggingDataModel>({
+    name: '',
     email: '',
     password: '',
     confirmPassword: '',
     isRegistring: false,
   });
   isRegistring = signal(false);
+  msgLogin = signal<MsgLogin | null>(null);
 
   loginForm = form(this.loginModel, (schemaPath) => {
     required(schemaPath.email, { message: 'El email es obligatorio' });
@@ -48,27 +50,49 @@ export class LoginPage {
   }
 
   login() {
-    console.warn('Login attempt', this.loginModel());
+    this.msgLogin.set(null);
     if (!this.isRegistring()) {
       this.authService.login(this.loginModel().email, this.loginModel().password).subscribe({
         next: (response) => {
           console.log('Login successful:', response);
-          this.router.navigate([FatherRoutes.DASHBOARD]);
+          this.msgLogin.set({
+            message: 'Inicio de sesión exitoso. Redirigiendo al dashboard...',
+            isError: false,
+          });
+          setTimeout(() => {
+            this.router.navigate([FatherRoutes.DASHBOARD]);
+          }, 1000);
         },
         error: (error) => {
-          console.error('Login failed:', error);
+          this.msgLogin.set({ message: error?.error?.error, isError: true });
         },
       });
     } else {
-      this.authService.register(this.loginModel().email, this.loginModel().password).subscribe({
-        next: (response) => {
-          console.log('Registration successful:', response);
-          this.router.navigate([FatherRoutes.DASHBOARD]);
-        },
-        error: (error) => {
-          console.error('Registration failed:', error);
-        },
-      });
+      this.authService
+        .register(this.loginModel().name, this.loginModel().email, this.loginModel().password)
+        .subscribe({
+          next: (response) => {
+            console.log('Registration successful:', response);
+            this.msgLogin.set({
+              message: 'Registro exitoso. Ahora puedes iniciar sesión.',
+              isError: false,
+            });
+            this.authService.login(this.loginModel().email, this.loginModel().password).subscribe({
+              next: (loginResponse) => {
+                console.log('Login after registration successful:', loginResponse);
+                setTimeout(() => {
+                  this.router.navigate([FatherRoutes.DASHBOARD]);
+                }, 1000);
+              },
+              error: (loginError) => {
+                this.msgLogin.set({ message: loginError?.error?.error, isError: true });
+              },
+            });
+          },
+          error: (error) => {
+            this.msgLogin.set({ message: error?.error?.error, isError: true });
+          },
+        });
     }
   }
 
@@ -83,6 +107,7 @@ export class LoginPage {
   defaultLogin() {
     this.isRegistring.set(false);
     this.loginModel.set({
+      name: '',
       email: 'prueba@gmail.com',
       password: '123456',
       confirmPassword: '',

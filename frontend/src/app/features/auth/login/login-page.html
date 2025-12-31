@@ -13,6 +13,33 @@
     <div class="flex flex-col w-xl h-fit items-center justify-center ml-8">
       <div class="w-100 flex items-center justify-center flex-col gap-4">
         <form class="flex flex-col items-center justify-center gap-4" (submit)="onSubmit($event)">
+          @if (msgLogin()) {
+            <div
+              class="text-sm mb-2"
+              [class.text-red-600]="msgLogin()!.isError"
+              [class.text-green-600]="!msgLogin()!.isError"
+            >
+              {{ msgLogin()!.message }}
+            </div>
+          }
+          @if (isRegistring()) {
+            <div class="flex flex-col items-start justify-center gap-2">
+              <span>Nombre</span>
+              <input
+                type="text"
+                placeholder="Introduce tu nombre..."
+                [field]="loginForm.name"
+                class="w-100 border-2 border-white rounded-sm p-2"
+              />
+              @if (loginForm.name().touched() && loginForm.name().invalid()) {
+                <ul>
+                  @for (error of loginForm.name().errors(); track error) {
+                    <li class="text-red-500 text-sm">* {{ error.message }}</li>
+                  }
+                </ul>
+              }
+            </div>
+          }
           <div class="flex flex-col items-start justify-center gap-2">
             <span>Email</span>
             <input
@@ -68,16 +95,20 @@
             @if (!isRegistring()) {
               <div>
                 <span class="text-sm text-nowrap">¿No tienes cuenta? </span>
-                <span class="text-sm text-nowrap" (click)="changeRegistring()">Regístrate</span>
+                <span class="text-sm text-nowrap font-bold" (click)="changeRegistring()"
+                  >Regístrate</span
+                >
               </div>
             } @else {
               <div>
                 <span class="text-sm text-nowrap">¿Tienes cuenta? </span>
-                <span class="text-sm text-nowrap" (click)="changeRegistring()">Inicia sesión</span>
+                <span class="text-sm text-nowrap font-bold" (click)="changeRegistring()"
+                  >Inicia sesión</span
+                >
               </div>
             }
           </div>
-          <button class="p-3 bg-blue-500 text-white rounded m-4 cursor-pointer" type="submit">
+          <button class="p-3 m-4 cursor-pointer primary-button" type="submit">
             {{ isRegistring() ? 'Regístrate' : 'Iniciar sesión' }}
           </button>
         </form>
