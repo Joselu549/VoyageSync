@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 interface LoginRequest {
@@ -37,12 +37,12 @@ export class AuthService {
   register(
     email: string,
     password: string,
-    name?: string
+    name?: string,
   ): Observable<{ message: string; userId: number }> {
     const payload = { email, password, name };
     return this.httpClient.post<{ message: string; userId: number }>(
       `${this.API_URL}/users/register`,
-      payload
+      payload,
     );
   }
 
@@ -52,7 +52,7 @@ export class AuthService {
       {},
       {
         withCredentials: true,
-      }
+      },
     );
   }
 
@@ -62,7 +62,7 @@ export class AuthService {
       {},
       {
         withCredentials: true,
-      }
+      },
     );
   }
 }

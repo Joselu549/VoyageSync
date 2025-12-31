@@ -4,13 +4,18 @@ import { AuthService } from '@services/auth.service';
 import { catchError, map, of } from 'rxjs';
 import { inject } from '@angular/core';
 
-export const authGuard: CanActivateFn = () => {
+export const rootRedirectGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
   return auth.checkSession().pipe(
-    map(() => true),
+    map(() => {
+      // Sesión válida: redirigir a dashboard
+      router.navigate(['/' + FatherRoutes.DASHBOARD]);
+      return false;
+    }),
     catchError(() => {
+      // Sin sesión: redirigir a login
       router.navigate(['/' + FatherRoutes.LOGIN]);
       return of(false);
     }),
