@@ -1,3 +1,4 @@
+import { FatherRoutes } from '@datasources/routes/routes';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '@services/auth.service';
 import { catchError, map, of } from 'rxjs';
@@ -10,8 +11,8 @@ export const authGuard: CanActivateFn = () => {
   return auth.checkSession().pipe(
     map(() => true),
     catchError(() => {
-      router.navigate(['/login']);
+      router.navigate(['/' + FatherRoutes.LOGIN]);
       return of(false);
-    })
+    }),
   );
 };

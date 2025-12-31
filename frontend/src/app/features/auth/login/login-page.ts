@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { email, Field, form, required, validate } from '@angular/forms/signals';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Router } from '@angular/router';
 import { LoggingDataModel } from '@datasources/login/login';
-import { AuthService } from '@services/auth.service';
 import { FatherRoutes } from '@datasources/routes/routes';
+import { AuthService } from '@services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',

@@ -1,8 +1,8 @@
+import { FatherRoutes } from '@datasources/routes/routes';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '@services/auth.service';
 import { catchError, map, of } from 'rxjs';
 import { inject } from '@angular/core';
-import { FatherRoutes } from '@datasources/routes/routes';
 
 export const rootRedirectGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
@@ -18,6 +18,6 @@ export const rootRedirectGuard: CanActivateFn = () => {
       // Sin sesión: redirigir a login
       router.navigate(['/' + FatherRoutes.LOGIN]);
       return of(false);
-    })
+    }),
   );
 };
