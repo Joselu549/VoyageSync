@@ -15,7 +15,8 @@
     "baseUrl": ".",
     "paths": {
       "@datasources/*": ["src/app/core/datasources/*"],
-      "@services/*": ["src/app/core/services/*"]
+      "@services/*": ["src/app/core/services/*"],
+      "@components/*": ["src/app/shared/components/*"]
     }
   },
   "angularCompilerOptions": {

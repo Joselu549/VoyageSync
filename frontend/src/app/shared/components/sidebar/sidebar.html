@@ -1,0 +1,92 @@
+<aside
+  [class]="
+    'bg-pink-soft text-white rounded-xl p-4 h-full flex flex-col transition-all duration-250 ' +
+    (isExpanded() ? 'w-64 items-center' : 'w-16 items-center')
+  "
+>
+  <div
+    class="flex flex-row w-full justify-between items-center mb-4"
+    [class]="isExpanded() ? '' : 'justify-center'"
+  >
+    @if (isExpanded()) {
+      <h2 class="text-lg font-bold">VoyageSync</h2>
+    }
+    <img
+      class="filter-white hover:scale-110 transition-transform cursor-pointer"
+      [ngSrc]="
+        isExpanded() ? 'assets/images/icons/bar-left.svg' : 'assets/images/icons/bar-right.svg'
+      "
+      width="24"
+      height="24"
+      (click)="toggleSidebar()"
+    />
+  </div>
+  <nav class="flex flex-col gap-2 w-full">
+    <a
+      routerLink="home"
+      routerLinkActive="bg-bg-teal-dark"
+      [class]="
+        'flex flex-row flex-nowrap gap-2 p-2 rounded hover:bg-teal-dark transition-colors whitespace-nowrap overflow-hidden ' +
+        (isExpanded() ? '' : 'text-center')
+      "
+      [title]="isExpanded() ? '' : 'Inicio'"
+    >
+      <img
+        class="filter-white hover:scale-110 transition-transform cursor-pointer"
+        [ngSrc]="
+          isExpanded() ? 'assets/images/icons/bar-left.svg' : 'assets/images/icons/bar-right.svg'
+        "
+        width="24"
+        height="24"
+        (click)="toggleSidebar()"
+      />
+      @if (isExpanded()) {
+        <span>Inicio</span>
+      }
+    </a>
+    <a
+      routerLink="trips"
+      routerLinkActive="bg-bg-teal-dark"
+      [class]="
+        'flex flex-row flex-nowrap p-2 gap-2 rounded hover:bg-teal-dark transition-colors whitespace-nowrap overflow-hidden ' +
+        (isExpanded() ? '' : 'text-center')
+      "
+      [title]="isExpanded() ? '' : 'Mis Viajes'"
+    >
+      <img
+        class="filter-white hover:scale-110 transition-transform cursor-pointer"
+        [ngSrc]="
+          isExpanded() ? 'assets/images/icons/bar-left.svg' : 'assets/images/icons/bar-right.svg'
+        "
+        width="24"
+        height="24"
+        (click)="toggleSidebar()"
+      />
+      @if (isExpanded()) {
+        <span>Mis Viajes</span>
+      }
+    </a>
+    <a
+      routerLink="settings"
+      routerLinkActive="bg-bg-teal-dark"
+      [class]="
+        'flex flex-row flex-nowrap gap-2 p-2 rounded hover:bg-teal-dark transition-colors whitespace-nowrap overflow-hidden ' +
+        (isExpanded() ? '' : 'text-center')
+      "
+      [title]="isExpanded() ? '' : 'Configuración'"
+    >
+      <img
+        class="filter-white hover:scale-110 transition-transform cursor-pointer"
+        [ngSrc]="
+          isExpanded() ? 'assets/images/icons/bar-left.svg' : 'assets/images/icons/bar-right.svg'
+        "
+        width="24"
+        height="24"
+        (click)="toggleSidebar()"
+      />
+      @if (isExpanded()) {
+        <span>Configuración</span>
+      }
+    </a>
+  </nav>
+</aside>

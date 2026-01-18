@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
+import { Sidebar } from '@components/sidebar/sidebar';
 
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterOutlet, Sidebar],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardPage {}
