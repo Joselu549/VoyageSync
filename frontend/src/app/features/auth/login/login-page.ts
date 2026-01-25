@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { email, Field, form, required, validate } from '@angular/forms/signals';
 import { LoggingDataModel, MsgLogin } from '@datasources/login/login';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FatherRoutes } from '@datasources/routes/routes';
+import { Component, inject, signal } from '@angular/core';
 import { AuthService } from '@services/auth.service';
 import { Router } from '@angular/router';
 
@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
   imports: [NgOptimizedImage, CommonModule, Field],
   templateUrl: './login-page.html',
   styleUrl: './login-page.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPage {
   loginModel = signal<LoggingDataModel>({

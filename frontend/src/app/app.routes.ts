@@ -5,6 +5,7 @@ import { LoginPage } from './features/auth/login/login-page';
 import { loginGuard } from './core/guards/login.guard';
 import { authGuard } from './core/guards/auth.guard';
 import { Routes } from '@angular/router';
+import { dashboardRoutes } from './features/dashboard/dashboard.routes';
 
 export const routes: Routes = [
   {
@@ -22,6 +23,7 @@ export const routes: Routes = [
     path: FatherRoutes.DASHBOARD,
     component: DashboardPage,
     canActivate: [authGuard],
+    children: dashboardRoutes,
   },
   {
     path: '**',
