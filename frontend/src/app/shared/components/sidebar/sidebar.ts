@@ -1,6 +1,6 @@
-import { NgOptimizedImage, NgClass, CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { NgOptimizedImage, CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, signal } from '@angular/core';
 
 @Component({
   selector: 'app-sidebar',

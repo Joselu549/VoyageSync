@@ -1,7 +1,7 @@
 <aside
   [class]="
-    'bg-pink-soft text-white rounded-xl p-4 h-full flex flex-col transition-all duration-250 ' +
-    (isExpanded() ? 'w-64 items-center' : 'w-18 items-center')
+    'mr-4 hidden md:flex bg-pink-soft text-white rounded-xl p-4 h-full flex-col transition-all duration-250 items-center' +
+    (isExpanded() ? ' w-64' : ' w-fit')
   "
 >
   <div
@@ -33,7 +33,6 @@
         [ngSrc]="'assets/images/icons/home.svg'"
         width="24"
         height="24"
-        (click)="toggleSidebar()"
       />
       @if (isExpanded()) {
         <span>Inicio</span>
@@ -53,7 +52,6 @@
         [ngSrc]="'assets/images/icons/planet.svg'"
         width="24"
         height="24"
-        (click)="toggleSidebar()"
       />
       @if (isExpanded()) {
         <span>Mis Viajes</span>
@@ -73,7 +71,6 @@
         [ngSrc]="'assets/images/icons/settings.svg'"
         width="24"
         height="24"
-        (click)="toggleSidebar()"
       />
       @if (isExpanded()) {
         <span>Configuración</span>
@@ -81,3 +78,32 @@
     </a>
   </nav>
 </aside>
+
+<nav
+  class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-pink-soft text-white rounded-full px-3 py-2 flex gap-3 items-center z-50 md:hidden shadow-lg"
+>
+  <a
+    routerLink="home"
+    routerLinkActive="bg-pink-dark"
+    title="Inicio"
+    class="p-2 rounded-full hover:bg-pink-dark transition-colors"
+  >
+    <img class="filter-white" [ngSrc]="'assets/images/icons/home.svg'" width="24" height="24" />
+  </a>
+  <a
+    routerLink="trips"
+    routerLinkActive="bg-pink-dark"
+    title="Mis Viajes"
+    class="p-2 rounded-full hover:bg-pink-dark transition-colors"
+  >
+    <img class="filter-white" [ngSrc]="'assets/images/icons/planet.svg'" width="24" height="24" />
+  </a>
+  <a
+    routerLink="settings"
+    routerLinkActive="bg-pink-dark"
+    title="Configuración"
+    class="p-2 rounded-full hover:bg-pink-dark transition-colors"
+  >
+    <img class="filter-white" [ngSrc]="'assets/images/icons/settings.svg'" width="24" height="24" />
+  </a>
+</nav>
