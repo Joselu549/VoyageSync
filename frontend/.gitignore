@@ -21,9 +21,6 @@ bun.lock
 .settings/
 *.sublime-workspace
 
-# IDEs
-.vscode/*
-.idea/*
 # Miscellaneous
 /.angular/cache
 .sass-cache/
