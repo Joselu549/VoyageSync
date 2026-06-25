@@ -1,0 +1,40 @@
+default_install_hook_types:
+  - pre-commit
+  - prepare-commit-msg
+repos:
+  - repo: local
+    hooks:
+      - id: google-java-format
+        name: google-java-format
+        entry: java -jar tools/google-java-format.jar --replace
+        language: system
+        files: \.java$
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+      - id: check-json
+      - id: check-xml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        exclude_types: [sql]
+      - id: check-merge-conflict
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.0.3
+    hooks:
+      - id: prettier
+        entry: prettier --write --config frontend/prettier.config.cjs
+        types_or: [css, javascript, html, json, ts]
+        additional_dependencies:
+          - "prettier@3.5.3"
+          - "prettier-plugin-sort-imports@1.8.8"
+        files: ^frontend/.*\.(scss|js|json|html|ts)$
+  - repo: https://github.com/avilaton/add-msg-issue-prefix-hook
+    rev: v0.0.8
+    hooks:
+      - id: add-msg-issue-prefix
+        args:
+          - "--template=[{}]"
+          - "--pattern=[a-zA-Z0-9]{1,10}-[0-9]{1,5}"
+          - "--default=[NO-ISSUE]"
+          - "--insert-after=^(feat|fix|docs|style|refactor|test|chore|ci|build|perf|revert):"

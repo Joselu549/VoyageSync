@@ -1,4 +1,5 @@
-You are an expert in TypeScript, Angular, and scalable web application development. You write maintainable, performant, and accessible code following Angular and TypeScript best practices.
+
+You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
 
 ## TypeScript Best Practices
 
@@ -9,23 +10,30 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 ## Angular Best Practices
 
 - Always use standalone components over NgModules
-- Must NOT set `standalone: true` inside Angular decorators. It's the default.
+- Must NOT set `standalone: true` inside Angular decorators. It's the default in Angular v20+.
+- Do NOT set `changeDetection: ChangeDetectionStrategy.OnPush` explicitly. `OnPush` is the default in Angular v22+.
 - Use signals for state management
 - Implement lazy loading for feature routes
 - Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
 - Use `NgOptimizedImage` for all static images.
   - `NgOptimizedImage` does not work for inline base64 images.
 
-## Components
+## Accessibility Requirements
+
+- It MUST pass all AXE checks.
+- It MUST follow all WCAG AA minimums, including focus management, color contrast, and ARIA attributes.
+
+### Components
 
 - Keep components small and focused on a single responsibility
 - Use `input()` and `output()` functions instead of decorators
 - Use `computed()` for derived state
-- Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
 - Prefer inline templates for small components
-- Prefer Reactive forms instead of Template-driven ones
+- Prefer Signal Forms (`@angular/forms/signals`) for new forms. They are stable in Angular v22+ and provide signal-based state, type-safe field access, and schema-based validation
+- When not using Signal Forms, prefer Reactive forms instead of Template-driven ones
 - Do NOT use `ngClass`, use `class` bindings instead
 - Do NOT use `ngStyle`, use `style` bindings instead
+- When using external templates/styles, use paths relative to the component TS file.
 
 ## State Management
 
@@ -39,9 +47,11 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Keep templates simple and avoid complex logic
 - Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
 - Use the async pipe to handle observables
+- Do not assume globals like (`new Date()`) are available.
 
 ## Services
 
 - Design services around a single responsibility
 - Use the `providedIn: 'root'` option for singleton services
+- Prefer the `@Service` decorator over `@Injectable({providedIn: 'root'})` for new singleton services (Angular v22+)
 - Use the `inject()` function instead of constructor injection
