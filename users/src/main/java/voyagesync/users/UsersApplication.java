@@ -1,12 +1,12 @@
-package voyagesync.users_service;
+package voyagesync.users;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class UsersServiceApplication {
+public class UsersApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(UsersServiceApplication.class, args);
+    SpringApplication.run(UsersApplication.class, args);
   }
 }

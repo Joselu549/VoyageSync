@@ -1,10 +1,10 @@
-package voyagesync.users_service;
+package voyagesync.users;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class UsersServiceApplicationTests {
+class UsersApplicationTests {
 
   @Test
   void contextLoads() {}
