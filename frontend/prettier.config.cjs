@@ -10,7 +10,7 @@ module.exports = {
   overrides: [
     {
       files: ['*.ts', '*.scss', '*.json', '*.html', '*.js'],
-      options: { tabWidth: 4 },
+      options: { tabWidth: 2 },
     },
   ],
 };
